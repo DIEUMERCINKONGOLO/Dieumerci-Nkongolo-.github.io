@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text x='50' y='80' text-anchor='middle' font-size='70'>📊</text></svg>">
+    <title>Dieumerci Nkongolo | Data Intelligence Architect</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts unique combination -->
+    <link href="httsps://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --deep-void: #06080f;
+            --abyss-blue: #0a0f1c;
+            --charcoal: #111827;
+            --electric-cyan: #00f2fe;
+            --neon-purple: #4facfe;
+            --gradient-prime: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+            --gradient-glow: linear-gradient(120deg, rgba(0,242,254,0.2), rgba(79,172,254,0.05));
+            --glass-border: rgba(0,242,254,0.25);
+            --card-bg-dark: rgba(17, 24, 39, 0.6);
+            --text-lighter: #eef2ff;
+            --text-dim: #9ca3af;
+        }
+
+        html {
+            font-size: 62.5%;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--deep-void);
+            color: var(--text-lighter);
+            line-height: 1.5;
+            cursor: default;
+            position: relative;
+        }
+
+        /* Signature animated gradient background - unique */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 30% 40%, rgba(0,242,254,0.08) 0%, transparent 60%),
+                        repeating-linear-gradient(45deg, rgba(79,172,254,0.02) 0px, rgba(79,172,254,0.02) 2px, transparent 2px, transparent 8px);
+            pointer-events: none;
+            z-index: -2;
+        }
+
+        /* Custom cursor glow effect - signature */
+        .cursor-glow {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(0,242,254,0.08) 0%, rgba(0,242,254,0) 70%);
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.05s ease;
+        }
+
+        /* Scrollbar unique */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--charcoal);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--electric-cyan);
+            border-radius: 10px;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.8rem 10%;
+            background: rgba(6, 8, 15, 0.85);
+            backdrop-filter: blur(16px);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,242,254,0.2);
+            transition: 0.3s;
+        }
+        .logo {
+            font-family: 'Space Grotesk', monospace;
+            font-size: 2.6rem;
+            font-weight: 700;
+            background: var(--gradient-prime);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+            position: relative;
+        }
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 40%;
+            height: 2px;
+            background: var(--gradient-prime);
+        }
+        .navbar a {
+            font-size: 1.6rem;
+            margin-left: 4rem;
+            color: var(--text-dim);
+            font-weight: 500;
+            transition: 0.3s;
+            position: relative;
+        }
+        .navbar a::before {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--gradient-prime);
+            transition: 0.3s;
+        }
+        .navbar a:hover::before, .navbar a.active::before {
+            width: 100%;
+        }
+        .navbar a:hover, .navbar a.active {
+            color: var(--electric-cyan);
+        }
+        #menu-icon {
+            font-size: 2.8rem;
+            color: var(--electric-cyan);
+            display: none;
+            cursor: pointer;
+        }
+
+        /* Sections general */
+        section {
+            padding: 12rem 10% 6rem;
+            min-height: 100vh;
+        }
+
+        /* Home Section - Unique Dynamic */
+        .home {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 4rem;
+            position: relative;
+        }
+        .badge {
+            background: rgba(0,242,254,0.12);
+            display: inline-block;
+            padding: 0.6rem 1.6rem;
+            border-radius: 40px;
+            font-size: 1.3rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            backdrop-filter: blur(4px);
+            margin-bottom: 2rem;
+            border-left: 2px solid var(--electric-cyan);
+        }
+        .home-content h3 {
+            font-size: 2.2rem;
+            font-weight: 500;
+            color: var(--text-dim);
+        }
+        .home-content h1 {
+            font-size: 6.2rem;
+            font-weight: 800;
+            font-family: 'Space Grotesk', sans-serif;
+            line-height: 1.1;
+            margin: 1.5rem 0;
+            background: linear-gradient(125deg, #ffffff, var(--electric-cyan), var(--neon-purple));
+            background-size: 200%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: textShift 6s infinite alternate;
+        }
+        @keyframes textShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        .typewriter {
+            font-size: 2.2rem;
+            margin: 1rem 0;
+        }
+        .typewriter span {
+            color: var(--electric-cyan);
+            border-right: 3px solid var(--electric-cyan);
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .home-content p {
+            font-size: 1.7rem;
+            color: var(--text-dim);
+            max-width: 90%;
+            margin: 2rem 0;
+            line-height: 1.6;
+        }
+        .social-icons {
+            display: flex;
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+        .social-icons a {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(0,242,254,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--electric-cyan);
+            border: 1px solid rgba(0,242,254,0.3);
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+        .social-icons a:hover {
+            transform: translateY(-5px) scale(1.1);
+            background: var(--gradient-prime);
+            color: var(--deep-void);
+            box-shadow: 0 0 18px var(--electric-cyan);
+        }
+        .btn-primary {
+            background: var(--gradient-prime);
+            padding: 1.2rem 3rem;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #06080f;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            transition: 0.3s;
+            box-shadow: 0 0 12px rgba(0,242,254,0.5);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 28px rgba(0,242,254,0.8);
+            gap: 1.5rem;
+        }
+
+        /* Home image 3D floating with unique border animation */
+        .home-visual {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+        .hexagon-frame {
+            width: 400px;
+            height: 360px;
+            background: linear-gradient(145deg, #00f2fe20, #4facfe10);
+            clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: float3D 6s ease-in-out infinite;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(0,242,254,0.5);
+        }
+        .hexagon-frame img {
+            width: 92%;
+            height: 92%;
+            
+            
+            clip-path: polygon(50% 0%, 90% 25%, 90% 75%, 50% 100%, 10% 75%, 10% 25%);
+            transition: 0.5s;
+            filter: grayscale(15%) contrast(1.05);
+            object-fit: contain;
+        }
+        .hexagon-frame:hover img {
+            transform: scale(1.02);
+            filter: grayscale(0%);
+        }
+        @keyframes float3D {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        /* About - unique asymmetrical */
+        .about {
+            background: var(--abyss-blue);
+            border-radius: 60px 0 60px 0;
+            margin: 2rem 6%;
+            backdrop-filter: blur(4px);
+            display: flex;
+            gap: 5rem;
+            align-items: center;
+        }
+        .about-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        .stat-card {
+            background: rgba(0,242,254,0.05);
+            padding: 1rem 1.8rem;
+            border-radius: 20px;
+            text-align: center;
+            border-right: 2px solid var(--electric-cyan);
+        }
+        .stat-card h4 {
+            font-size: 2.5rem;
+            color: var(--electric-cyan);
+        }
+
+        /* Skills - Unique glassmorphism */
+        .skills-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .skill-card {
+            background: rgba(15, 25, 40, 0.65);
+            backdrop-filter: blur(12px);
+            padding: 2rem 2.5rem;
+            border-radius: 32px;
+            text-align: center;
+            min-width: 170px;
+            border: 1px solid rgba(0,242,254,0.2);
+            transition: 0.4s;
+        }
+        .skill-card i {
+            font-size: 3.5rem;
+            background: var(--gradient-prime);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .skill-card h3 {
+            margin-top: 1rem;
+            font-size: 1.9rem;
+        }
+        .skill-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--electric-cyan);
+            background: rgba(0,242,254,0.1);
+        }
+
+        /* projects / services unique */
+        .project-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+        .project-card {
+            background: rgba(12, 18, 30, 0.7);
+            border-radius: 32px;
+            padding: 2.5rem;
+            transition: 0.4s;
+            border: 1px solid rgba(79,172,254,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+.btn-primary {
+    display: inline-block;
+    background: linear-gradient(135deg, #00f2fe, #4facfe);
+    color: #06080f;
+    padding: 0.8rem 1.8rem;
+    border-radius: 40px;
+    font-weight: 600;
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
+    gap: 0.5rem;
+}
+
+.project-card {
+    background: rgba(12, 18, 30, 0.7);
+    border-radius: 28px;
+    padding: 2rem;
+    transition: 0.3s;
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.project-card p {
+    flex-grow: 1;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    margin: 1rem 0;
+}
+
+.project-showcase {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}s
+
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,242,254,0.08), transparent);
+            transition: 0.6s;
+        }
+        .project-card:hover::before {
+            left: 100%;
+        }
+        .project-card i {
+            font-size: 3.2rem;
+            color: var(--electric-cyan);
+            margin-bottom: 1.5rem;
+        }
+
+        /* SQL lab unique */
+        .sql-lab-container {
+            background: #030617;
+            border-radius: 40px;
+            padding: 3rem;
+            border: 1px solid var(--glass-border);
+        }
+        textarea {
+            background: #0b1122;
+            border: 1px solid #2d3a5e;
+            color: #b9e6ff;
+            font-family: 'Space Grotesk', monospace;
+        }
+
+        /* Contact form - unique wave */
+        .contact-form {
+            background: rgba(17, 24, 39, 0.4);
+            padding: 3rem;
+            border-radius: 48px;
+        }
+
+        footer {
+            background: #050a12;
+            border-top: 1px solid rgba(0,242,254,0.2);
+        }
+
+        @media (max-width: 900px) {
+            .home { grid-template-columns: 1fr; text-align: center; }
+            .home-content p { max-width: 100%; }
+            .about { flex-direction: column; text-align: center; }
+            .navbar { position: absolute; top: 100%; left: -100%; width: 100%; background: #0a0f1cee; backdrop-filter: blur(20px); transition: 0.4s; padding: 2rem; }
+            .navbar.active { left: 0; }
+            .navbar a { display: block; margin: 2rem 0; text-align: center; }
+            #menu-icon { display: block; }
+        }
+    </style>
+</head>
+<body>
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<header class="header">
+    <a href="#" class="logo">Ir<span style="color:#00f2fe;">.Nkongolo</span></a>
+    <i class="fas fa-bolt" id="menu-icon"></i>
+    <nav class="navbar">
+        <a href="#home" class="active">Accueil</a>
+        <a href="#about">Expertise</a>
+        <a href="#services">Réalisations</a>
+        <a href="#sql-lab">SQL Studio</a>
+        <a href="#contact">Échange</a>
+    </nav>
+</header>
+
+<!-- HOME section -->
+<section class="home" id="home">
+    <div class="home-content">
+        <div class="badge"><i class="fas fa-brain"></i> Data Analytics & Business Intelligence</div>
+        <h3>Data Architect</h3>
+        <h1>Dieumerci Nkongolo</h1>
+        <div class="typewriter">Je transforme les données en <span>décision stratosphérique</span> 🚀</div>
+        <p>Je transforme des données brutes en tableaux de bord analytiques grâce à Excel ,SQL, Python, Tableau Public et Power BI, en garantissant fiabilité et clarté pour vos indicateurs de performance.</p>
+        <div class="social-icons">
+            <a href="https://github.com/DIEUMERCINKONGOLO"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/dieumerci-nkongolo/"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.facebook.com/dnkboydieumerci.nkongolokamba"><i class="fab fa-facebook"></i></a>
+           <a href="https://www.tiktok.com/@dieumerci.nkongolo"><i class="fab fa-tiktok"></i></a>
+            <a href="https://wa.me/243962711237"><i class="fab fa-WhatsApp"></i></a>
+        </div>
+     
+        <a href="cv.pdf"  class="btn-primary"><i class="fas fa-file-pdf"></i> CV Exécutif</a>
+    </div>
+    <div class="home-visual">
+        <div class="hexagon-frame">
+            <img src="dnk1.jpg" alt="Dieumerci Portrait">
+        </div>
+    </div>
+</section>
+
+<!-- ABOUT section personnalisée -->
+<section class="about" id="about">
+    <div>
+        <div class="hexagon-frame" style="width: 280px; height: 280px;">
+            <img src="dnk1.jpg" alt="about">
+        </div>
+    </div>
+    <div>
+        <h2 class="heading" style="font-size: 3.8rem;">L'<span style="color:#00f2fe;">Innovation</span> par la donnée</h2>
+        <p style="font-size:1.7rem; margin:2rem 0;">Avec une  années et demi d’expérience en analyse de données, je conçois des reportings sur-mesure : suivi des ventes, optimisation des stocks, et tableaux de bord interactifs. Chaque projet est une opportunité de transformer la data brute en leviers d’action concrets pour la performance métier.</p>
+        <div class="about-stats">
+            <div class="stat-card"><h4>15+</h4><p>Projets </p></div>
+            <div class="stat-card"><h4>98%</h4><p>Précision modèles</p></div>
+            <div class="stat-card"><h4>∞</h4><p>Curiosité</p></div>
+        </div>
+        <a href="https://github.com/DIEUMERCINKONGOLO" class="btn-primary" style="margin-top:2rem; display:inline-block;">Explorer mon univers <i class="fas fa-arrow-right"></i></a>
+    </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+    <h2 class="heading" style="text-align:center;">Armement <span style="color:#00f2fe;">technique</span></h2>
+    <div class="skills-grid">
+        <div class="skill-card"><i class="fas fa-database"></i><h3>SQL / PostgreSQL</h3></div>
+        <div class="skill-card"><i class="fab fa-python"></i><h3>Python / Pandas</h3></div>
+        <div class="skill-card"><i class="fas fa-chart-pie"></i><h3>Power BI / Tableau</h3></div>
+        <div class="skill-card"><i class="fas fa-database"></i><h3>ETL / Data Warehousing</h3></div>
+        <div class="skill-card"><i class="fas fa-file-excel"></i></i><h3>Microsoft Excel</h3></div>
+        <div class="skill-card"><i class="fas fa-chart-line"></i><h3>Analyse de tendances</h3></div>
+    </div>
+</section>
+
+<!-- PROJECTS section personnalisée -->
+<section class="services" id="services">
+    <h2 class="heading" style="text-align: center;">Projets <span style="color: #00f2fe;">phares</span></h2>
+    <div class="project-showcase">
+        
+        <!-- Projet 1 - Python E-commerce -->
+        <div class="project-card">
+            <i class="fas fa-chart-line"></i>
+            <h3>🐍 Analyse Stratégique E-commerce - AfriMarket (Python)</h3>
+            <p>AfriMarket est une plateforme e-commerce panafricaine présente dans plusieurs villes d'Afrique francophone. Analyse des ventes, comportements clients et recommandations stratégiques.</p>
+            <a href="https://github.com/DIEUMERCINKONGOLO/-Analyse-Strat-gique-Ecommerce-AfriMarket-Python-" class="btn-primary" target="_blank">Étude détaillée →</a>
+        </div>
+        
+        <!-- Projet 2 - RH Analytics SQL -->
+        <div class="project-card">
+            <i class="fas fa-chart-simple"></i>
+            <h3>📊 Projet RH Analytics – SQL (PostgreSQL)</h3>
+            <p>Simulation d'une mission réelle de Data Analyst SQL au sein de l'entreprise fictive DataLendo pour le compte du service Ressources Humaines (RH).</p>
+            <a href="https://github.com/DIEUMERCINKONGOLO/-RH-Analytics-SQL-PostgreSQL-" class="btn-primary" target="_blank">Voir le projet →</a>
+        </div>
+        
+        <!-- Projet 3 - Gestion de stock Excel -->
+        <div class="project-card">
+            <i class="fas fa-warehouse"></i>
+            <h3>📦 Gestion de stock - Tableau de bord interactif (Excel)</h3>
+            <p>Dashboard Excel pour faciliter la gestion des marchandises (Biculus, Consoles, Electro, SmartPhone) avec graphiques dynamiques et indicateurs clés.</p>
+            <a href="https://github.com/DIEUMERCINKONGOLO/Stock-Management-Interactive-Dashboard-Excel" class="btn-primary" target="_blank">Explorer le dashboard →</a>
+        </div>
+        
+        <!-- Projet 4 - SMARTBUSINESS Excel -->
+        <div class="project-card">
+            <i class="fas fa-language"></i>
+            <h3>📊 SMARTBUSINESS - Tableau de bord analytique (Excel)</h3>
+            <p>Tableau de bord analytique complet pour l'entreprise SMARTBUSINESS : suivi des ventes, KPIs, et analyse de performance.</p>
+            <a href="https://github.com/DIEUMERCINKONGOLO/SMARTBUSINESS-Analytical-Dashboard-Excel-" class="btn-primary" target="_blank">Explorer le projet →</a>
+        </div>
+        
+        <!-- Projet 5 - Expérience client Tableau -->
+        <div class="project-card">
+            <i class="fas fa-chart-scatter"></i>
+            <h3>✈️ Analyse expérience client - Compagnies aériennes (Tableau)</h3>
+            <p>Tableau de bord interactif analysant la satisfaction des passagers, les délais, et les facteurs d'expérience client dans le transport aérien.</p>
+            <a href="https://github.com/DIEUMERCINKONGOLO/Airline-Customer-Experience-Analysis-Dashboard-Tableau-" class="btn-primary" target="_blank">Voir le cas d'étude →</a>
+        </div>
+        
+        <!-- Projet 6 - ETL Pipeline -->
+        <div class="project-card">
+            <i class="fas fa-globe"></i>
+            <h3>🔄 ETL Pipeline - Données massives (10M+ lignes)</h3>
+            <p>Pipeline ETL optimisé avec Apache Airflow & Spark. Traitement de données à grande échelle et réduction des coûts de 40%.</p>
+            <a href="#" class="btn-primary" target="_blank">Voir l'architecture →</a>
+        </div>
+        
+    </div>
+</section>
+
+<!-- SQL LAB unique signature -->
+<section id="sql-lab">
+    <h2 class="heading" style="text-align:center;">SQL <span style="color:#00f2fe;">Playground</span></h2>
+    <div class="sql-lab-container">
+        <p style="margin-bottom:1rem;"><i class="fas fa-terminal"></i> Exécutez du SQL sur une table démo "sales_data" :</p>
+        <textarea id="sqlQuery" rows="5">SELECT product_name, revenue FROM sales_data WHERE revenue > 500 ORDER BY revenue DESC;</textarea><br><br>
+        <button onclick="runAdvancedSQL()" class="btn-primary"><i class="fas fa-play"></i> Lancer la requête</button>
+        <pre id="sqlResult" style="background:#0a0f1c; padding:1.5rem; border-radius:1.5rem; margin-top:2rem; overflow-x:auto;"></pre>
+        <p class="hint" style="font-size:1.2rem; margin-top:1rem;">💡 Table: sales_data (product_name, revenue, region) - valeurs: Laptop(1250), Phone(780), Tablet(420)</p>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+    <h2 class="heading" style="text-align:center;">Prenons <span style="color:#00f2fe;">contact</span></h2>
+    <div class="contact-form">
+        <form action="dieumercinkongolo7@gmail.com" method="post" enctype="text/plain"></form>
+        
+            <div style="display:flex; gap:2rem; flex-wrap:wrap;">
+                <input type="text" placeholder="Nom complet" style="flex:1; background:#111827; border:1px solid #2d3a5e; border-radius:30px; padding:1.2rem; color:white;">
+                <input type="email" placeholder="Votre email" style="flex:1; background:#111827; border:1px solid #2d3a5e; border-radius:30px; padding:1.2rem;">
+            </div>
+            <input type="text" placeholder="Sujet" style="width:100%; margin:1rem 0; background:#111827; padding:1.2rem; border-radius:30px;">
+            <textarea rows="5" placeholder="Votre message ..." style="width:100%; background:#111827; border-radius:30px; padding:1.5rem;"></textarea>
+            <button class="btn-primary" style="margin-top:1.5rem; border:none; cursor:pointer;"><i class="fas fa-paper-plane"></i> Envoyer</button>
+        </form>
+    </div>
+</section>
+
+<footer class="footer" style="text-align:center; padding:2rem 10%;">
+    <p>© 2026 Dieumerci Nkongolo — Data Analyst ·Excel  ·SQL · Python · Tableau Public ·Power BI · Sur mesure.</p>
+    <div style="margin-top:1rem;"><a href="#home" style="color:#00f2fe;"><i class="fas fa-arrow-up"></i> Retour</a></div>
+</footer>
+
+<script>
+    // SQL.js with dynamic table for uniqueness
+    let sqlDb = null;
+    async function initProSQL() {
+        const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}` });
+        const db = new SQL.Database();
+        db.run(`CREATE TABLE sales_data (product_name TEXT, revenue INTEGER, region TEXT);
+                INSERT INTO sales_data VALUES ('Laptop',1250,'Europe'),('Phone',780,'North America'),('Tablet',420,'Asia'),('Monitor',950,'Europe'),('Keyboard',320,'Asia');`);
+        return db;
+    }
+    const sqlPromise = initProSQL();
+
+    window.runAdvancedSQL = async function() {
+        const db = await sqlPromise;
+        const query = document.getElementById("sqlQuery").value;
+        try {
+            const result = db.exec(query);
+            if(result.length === 0) document.getElementById("sqlResult").innerText = "✅ Requête validée (aucun résultat retourné).";
+            else document.getElementById("sqlResult").innerHTML = JSON.stringify(result, null, 2);
+        } catch(e) {
+            document.getElementById("sqlResult").innerHTML = "❌ Erreur syntaxique: " + e.message;
+        }
+    };
+
+    // menu toggler
+    const menuBtn = document.getElementById('menu-icon');
+    const navbar = document.querySelector('.navbar');
+    menuBtn.onclick = () => {
+        navbar.classList.toggle('active');
+        menuBtn.classList.toggle('fa-bolt');
+        menuBtn.classList.toggle('fa-times');
+    };
+
+    // active scroll
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.navbar a');
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 200;
+            if(scrollY >= sectionTop) current = section.getAttribute('id');
+        });
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if(link.getAttribute('href').includes(current)) link.classList.add('active');
+        });
+        document.querySelector('.header').classList.toggle('sticky', scrollY > 50);
+    });
+
+    // cursor glow unique
+    const cursor = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    // typewriter
+    const typeSpan = document.querySelector('.typewriter span');
+    const roles = ['tableaux de bord interactifs 📊', 'analyse de données 📈', 'KPIs stratégiques 🎯', 'reporting sur mesure 📋'];
+    let idx = 0;
+    setInterval(() => {
+        idx = (idx + 1) % roles.length;
+        if(typeSpan) typeSpan.style.opacity = '0';
+        setTimeout(() => {
+            if(typeSpan) { typeSpan.textContent = roles[idx]; typeSpan.style.opacity = '1'; }
+        }, 200);
+    }, 2800);
+</script>
+</body>
+</html>
+```
